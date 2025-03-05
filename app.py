@@ -4,16 +4,26 @@ import pandas as pd
 from tabulate import tabulate
 import logging
 import os
+import sys
 
 # Set up logging
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    stream=sys.stdout
+)
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    logger.info("Accessing index page")
+    try:
+        return render_template('index.html')
+    except Exception as e:
+        logger.error(f"Error rendering index page: {str(e)}")
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/get_data', methods=['POST'])
 def get_data():
@@ -103,5 +113,10 @@ def get_data():
         return jsonify({'success': False, 'error': str(e)})
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port) 
+    try:
+        port = int(os.environ.get('PORT', 5000))
+        logger.info(f"Starting application on port {port}")
+        app.run(host='0.0.0.0', port=port)
+    except Exception as e:
+        logger.error(f"Error starting application: {str(e)}")
+        raise 
