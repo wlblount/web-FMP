@@ -1,21 +1,9 @@
 #version 1.0.5  updated 2/17/25 added acceptance date as a fmp_incts factor
 
-    ##TO DO - fmp_screen():  explore if all financial factors work (bal sheet items, income, items, metrics???
-    ##      - explore 'requote_uri' in all urls.
-    ##      - look for unneeded imports
-
-#     https://financialmodelingprep.com/developer/docs
-
-from tvDatafeed import TvDatafeed, Interval   # from https://github.com/rongardF/tvdatafeed
 import time
-import utils
 import certifi
-import bt
-import ffn
 import pandas as pd
 import numpy as np
-import matplotlib
-import matplotlib.pyplot as plt
 import datetime as dt
 import json
 import re
@@ -26,12 +14,8 @@ from urllib.request import urlopen
 from urllib.parse import urlencode
 import requests   
 from datetime import datetime 
-from tqdm import notebook, tqdm    #ex: for i in notebook.tqdm(range(1,100000000)):
+from tqdm import tqdm
 from requests.utils import requote_uri
-from sklearn.preprocessing import StandardScaler
-from matplotlib.ticker import FormatStrFormatter
-from IPython.core.display import display, HTML
-
 import os
 
 # Get the API key from the environment variable
@@ -116,7 +100,7 @@ def fmp_priceLoop(syms, start='1960-01-01', end=str(dt.datetime.now().date()), f
             df[i]=dff
       
     else:
-        for i in notebook.tqdm(syms, disable=False):
+        for i in tqdm(syms, disable=False):
             dff=fmp_price(i, start=start, end=end, facs=[fac])
             df[i]=dff
    
@@ -133,11 +117,11 @@ def fmp_priceLbk(sym, date,facs=['close']):
            "vwap", "label", "changeOverTime"
            
     '''
-    url= f"https://financialmodelingprep.com/api/v3/historical-price-full/{sym}?from={date}&to={date}&apikey=deb84eb89cd5f862f8f3216ea4d44719"
+    url = f"https://financialmodelingprep.com/api/v3/historical-price-full/{sym}?from={date}&to={date}&apikey={apikey}"
     response = urlopen(url, cafile=certifi.where())
     data = response.read().decode("utf-8")
-    stuff=json.loads(data)
-    l=stuff['historical'] [0]
+    stuff = json.loads(data)
+    l = stuff['historical'][0]
     return [l[key] for key in facs]
 #--------------------------------------------------------    
 def fmp_spread(long, short, start='1960-01-01', end=str(dt.datetime.now().date()), ratio=False):
@@ -982,13 +966,13 @@ res.assets
 A list of assets that were included in the backtest.
 res.rets
 
-The portfolio’s returns as a time series (returns from one time period to the next).
+The portfolio's returns as a time series (returns from one time period to the next).
 res.prices
 
 The prices of the assets in the portfolio over time.
 res.security_weights
 
-A DataFrame showing the portfolio’s weights in individual assets over time.
+A DataFrame showing the portfolio's weights in individual assets over time.
 res.benchmark
 
 If a benchmark was specified, this will contain benchmark performance data.
