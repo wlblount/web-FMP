@@ -3,6 +3,7 @@ import fmp
 import pandas as pd
 from tabulate import tabulate
 import logging
+import os
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -102,4 +103,5 @@ def get_data():
         return jsonify({'success': False, 'error': str(e)})
 
 if __name__ == '__main__':
-    app.run(debug=True) 
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port) 
