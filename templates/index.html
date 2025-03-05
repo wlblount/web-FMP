@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FMP Multi-Function Tool</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>FMP Multi-Function Tool</h1>
+        
+        <div class="controls">
+            <div class="input-group">
+                <label for="functionSelector">Select FMP Function:</label>
+                <select id="functionSelector" class="select-input">
+                    <option value="Intraday Data">Intraday Data</option>
+                    <option value="Company Profile">Company Profile</option>
+                    <option value="Search Data">Search Data</option>
+                    <option value="Earnings Dates">Earnings Dates</option>
+                    <option value="Dividends">Dividends</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="stockSymbol">Enter Stock Symbol:</label>
+                <input type="text" id="stockSymbol" class="text-input" placeholder="e.g., AAPL">
+            </div>
+
+            <div id="periodSelector" class="input-group" style="display: none;">
+                <label for="period">Select Time Period:</label>
+                <select id="period" class="select-input">
+                    <option value="1min">1 Minute</option>
+                    <option value="5min">5 Minutes</option>
+                    <option value="15min">15 Minutes</option>
+                    <option value="30min" selected>30 Minutes</option>
+                    <option value="1hour">1 Hour</option>
+                    <option value="1day">1 Day</option>
+                </select>
+            </div>
+
+            <button id="searchBtn" class="search-button">Run</button>
+        </div>
+
+        <div id="error-message" class="error-message"></div>
+        
+        <div class="output-container">
+            <div id="output" class="output-text"></div>
+            <div id="description" class="description-text"></div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html> 
