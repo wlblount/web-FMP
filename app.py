@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify
-import fmp
+import fmp_lite as fmp
 import pandas as pd
 from tabulate import tabulate
 import logging
