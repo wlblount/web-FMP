@@ -5,6 +5,10 @@ import certifi
 from datetime import datetime
 import pandas as pd
 import numpy as np
+import logging
+
+# Set up logging
+logger = logging.getLogger(__name__)
 
 # Get the API key from the environment variable
 apikey = os.getenv('FMP_API_KEY')
@@ -55,7 +59,15 @@ def fmp_profF(sym):
     response = urlopen(url, cafile=certifi.where())
     data = response.read().decode("utf-8")
     result = json.loads(data)
-    return result[0] if result else None
+
+    # Log the raw API response for debugging
+    logger.info(f"API response for {sym}: {result}")
+
+    if result and isinstance(result, list) and len(result) > 0:
+        # Return the complete profile without filtering keys
+        return result[0]
+    
+    return None
 
 def fmp_search(searchterm):
     """

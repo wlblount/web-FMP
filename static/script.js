@@ -43,14 +43,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Format company profile data
     function formatCompanyProfile(data) {
         if (!data) return '';
+        console.log('Profile data:', data);
         return `
             <div class="profile-card">
-                <h2>${data.name || 'Company Profile'}</h2>
+                <h2>${data.companyName || 'Company Profile'}</h2>
                 <div class="profile-grid">
                     <div class="profile-section">
                         <h3>Basic Information</h3>
                         <p><span class="label">Symbol:</span> <span class="symbol">${data.symbol || 'N/A'}</span></p>
-                        <p><span class="label">Exchange:</span> ${data.exchange || 'N/A'}</p>
+                        <p><span class="label">Exchange:</span> ${data.exchangeShortName || 'N/A'}</p>
                         <p><span class="label">Industry:</span> ${data.industry || 'N/A'}</p>
                         <p><span class="label">Sector:</span> ${data.sector || 'N/A'}</p>
                         <p><span class="label">Country:</span> ${data.country || 'N/A'}</p>
@@ -60,15 +61,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         <h3>Financial Metrics</h3>
                         <p><span class="label">Market Cap:</span> <span class="number">${formatNumber(data.mktCap)}</span></p>
                         <p><span class="label">Beta:</span> ${formatNumber(data.beta)}</p>
-                        <p><span class="label">52 Week High:</span> <span class="number">${formatNumber(data.range?.split('-')[1])}</span></p>
-                        <p><span class="label">52 Week Low:</span> <span class="number">${formatNumber(data.range?.split('-')[0])}</span></p>
                         <p><span class="label">Price:</span> <span class="number">${formatNumber(data.price)}</span></p>
                         <p><span class="label">Volume:</span> <span class="number">${formatNumber(data.volume)}</span></p>
                     </div>
                     <div class="profile-section">
                         <h3>Company Details</h3>
                         <p><span class="label">CEO:</span> ${data.ceo || 'N/A'}</p>
-                        <p><span class="label">Employees:</span> ${formatNumber(data.employees)}</p>
+                        <p><span class="label">Employees:</span> ${formatNumber(data.fullTimeEmployees)}</p>
                         <p><span class="label">Founded:</span> ${data.ipoDate || 'N/A'}</p>
                         <p><span class="label">Website:</span> <a href="${data.website || '#'}" target="_blank">${data.website || 'N/A'}</a></p>
                         <p><span class="label">Address:</span> ${data.address || 'N/A'}</p>
@@ -76,6 +75,14 @@ document.addEventListener('DOMContentLoaded', () => {
                         <p><span class="label">State:</span> ${data.state || 'N/A'}</p>
                     </div>
                 </div>
+                ${data.description ? `
+                    <div class="profile-section description-section">
+                        <h3>Company Description</h3>
+                        <div class="profile-description">
+                            ${data.description}
+                        </div>
+                    </div>
+                ` : ''}
             </div>
         `;
     }

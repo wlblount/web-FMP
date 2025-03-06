@@ -294,4 +294,98 @@ label {
     .controls {
         gap: 1rem;
     }
+}
+
+/* Add these styles for the company profile description */
+.description-section {
+    margin-top: 20px;
+    width: 100%;
+}
+
+.profile-description {
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    line-height: 1.6;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+/* Scrollbar styling */
+.profile-description::-webkit-scrollbar {
+    width: 8px;
+}
+
+.profile-description::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.profile-description::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.profile-description::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Ensure the profile card has proper spacing */
+.profile-card {
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.profile-section {
+    margin-bottom: 20px;
+}
+
+.profile-section h3 {
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 0.25rem;
+}
+
+.profile-section p {
+    margin: 0.25rem 0;
+    color: #34495e;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.profile-section .label {
+    font-weight: 500;
+    color: #7f8c8d;
+    min-width: 100px;
+}
+
+.profile-section .number {
+    font-family: 'Courier New', monospace;
+    text-align: right;
+    font-size: 0.9rem;
+}
+
+.profile-section .symbol {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.profile-section a {
+    color: #3498db;
+    text-decoration: none;
+    font-size: 0.9rem;
+    word-break: break-all;
+}
+
+.profile-section a:hover {
+    text-decoration: underline;
 } 
