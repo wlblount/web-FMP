@@ -1,26 +1,14 @@
 from flask import Flask, render_template, request, jsonify
 import fmp_multi as fmp
-import logging
 import os
-import sys
-
-# Set up logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    stream=sys.stdout
-)
-logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
 @app.route('/')
 def index():
-    logger.info("Accessing index page")
     try:
         return render_template('index.html')
     except Exception as e:
-        logger.error(f"Error rendering index page: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
 @app.route('/get_data', methods=['POST'])
@@ -29,8 +17,6 @@ def get_data():
         function_type = request.form.get('function_type')
         symbol = request.form.get('symbol', '').upper()
         period = request.form.get('period', '30min')
-        
-        logger.info(f"Processing request for {function_type} with symbol {symbol}")
         
         if function_type == "Intraday Data":
             data = fmp.fmp_intra(symbol, period=period)
@@ -66,14 +52,8 @@ def get_data():
             return jsonify({'success': False, 'error': 'No dividend data found for the given symbol.'})
 
     except Exception as e:
-        logger.error(f"Error processing request: {str(e)}")
         return jsonify({'success': False, 'error': str(e)})
 
 if __name__ == '__main__':
-    try:
-        port = int(os.environ.get('PORT', 5000))
-        logger.info(f"Starting application on port {port}")
-        app.run(host='0.0.0.0', port=port)
-    except Exception as e:
-        logger.error(f"Error starting application: {str(e)}")
-        raise 
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port) 

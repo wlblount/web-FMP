@@ -5,10 +5,6 @@ import certifi
 from datetime import datetime
 import pandas as pd
 import numpy as np
-import logging
-
-# Set up logging
-logger = logging.getLogger(__name__)
 
 # Get the API key from the environment variable
 apikey = os.getenv('FMP_API_KEY')
@@ -45,7 +41,6 @@ def fmp_intra(sym, period='30min'):
     data = response.read().decode("utf-8")
     result = json.loads(data)
     if result:
-        # Convert dates to datetime objects and sort
         for item in result:
             item['date'] = datetime.fromisoformat(item['date'].replace('Z', '+00:00'))
         result.sort(key=lambda x: x['date'], reverse=True)
@@ -60,11 +55,7 @@ def fmp_profF(sym):
     data = response.read().decode("utf-8")
     result = json.loads(data)
 
-    # Log the raw API response for debugging
-    logger.info(f"API response for {sym}: {result}")
-
     if result and isinstance(result, list) and len(result) > 0:
-        # Return the complete profile without filtering keys
         return result[0]
     
     return None
@@ -89,13 +80,10 @@ def fmp_earnSym(sym, n=5):
     data = response.read().decode("utf-8")
     result = json.loads(data)
     if result:
-        # Convert dates to datetime objects
         for item in result:
             item['date'] = datetime.fromisoformat(item['date'].replace('Z', '+00:00'))
-        # Sort by date descending (newest first) and take first n items
         result.sort(key=lambda x: x['date'], reverse=True)
         result = result[:n]
-        # Sort back to ascending (oldest first) for display
         result.sort(key=lambda x: x['date'])
     return result
 
@@ -109,7 +97,6 @@ def fmp_div(sym, num=13):
     result = json.loads(data)
     
     if 'historical' in result:
-        # Convert to DataFrame
         df = pd.DataFrame(result['historical'])
         df = df.drop(columns=['label'])
         df = df.rename(columns={'date': 'exDate'})
@@ -117,23 +104,18 @@ def fmp_div(sym, num=13):
         df.index = pd.to_datetime(df.index)
         df = df.sort_index()
 
-        # Calculate trailing dividends (last 359 days)
         df['trail'] = df.adjDividend.rolling(window='359D').sum()
         
-        # Get price data for yield calculations using fmp_price
         price = fmp_price(sym, start=df.index[0].strftime('%Y-%m-%d'))
         price.index = pd.to_datetime(price.index)
         newdf = pd.concat([df, price.reindex(df.index)], axis=1)
         
-        # Calculate yields
-        dividend_count = df['dividend'].rolling(window='360D').count().iloc[-1]  # Get the last value
+        dividend_count = df['dividend'].rolling(window='360D').count().iloc[-1]
         newdf['trailYield'] = np.round(newdf.trail/newdf.close*100, 2)
         newdf['curYield'] = np.round(newdf.adjDividend*dividend_count/newdf.close*100, 2)
         
-        # Take the most recent num rows
         newdf = newdf.tail(num)
         
-        # Convert back to list of dictionaries for frontend
         result = []
         for date, row in newdf.iterrows():
             result.append({
@@ -147,16 +129,4 @@ def fmp_div(sym, num=13):
                 'declarationDate': row.get('declarationDate')
             })
         return result
-    return [] 
-
-def fmp_close(sym, n=1):
-    """
-    Get the last n closing prices for a symbol
-    """
-    url = f'https://financialmodelingprep.com/api/v3/historical-price-full/{sym}?timeseries={n}&apikey={apikey}'
-    response = urlopen(url, cafile=certifi.where())
-    data = response.read().decode("utf-8")
-    result = json.loads(data)
-    if 'historical' in result:
-        return result['historical']
     return [] 
